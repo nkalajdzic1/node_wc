@@ -1,8 +1,18 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const User = require('../database/models/user');
 
-router.get('/', (req, res) => {
-  res.send('index');
+router.get('/', async (req, res) => {
+
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (exception) {
+    res.status(500).json({
+      message: exception.message
+    });
+  }
+
 });
 
 router.get('/list', (req, res) => {
