@@ -36,7 +36,7 @@ const importData = async () => {
     console.log("Data for users imported.");
     //process.exit();
   } catch (exception) {
-    console.log('ss');
+    console.log(exception);
   }
 }
 
@@ -49,7 +49,7 @@ deleteData()
 
 /* 
   NOTE: with if(process.argv[2] === '-i') deleteData().then... 
-  we could specify when running the server if we want to execute inser, delete or both for the db
+  we could specify when running the server if we want to execute insert, delete or both for the db
 */
 
 //<<<<<< server >>>>>>//
