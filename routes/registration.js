@@ -3,7 +3,9 @@ const bcrypt = require('bcrypt');
 const router = express.Router();
 
 const User = require('../database/models/user');
+const authenticateToken = require('./authMiddleware');
 
+//<<<<<< registration route >>>>>>//
 router.post('/', async (req, res) => {
 
   try {
@@ -18,8 +20,6 @@ router.post('/', async (req, res) => {
 
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-      console.log(`${hashedPassword}`);
-
       User.create({
         email: req.body.email,
         password: hashedPassword
@@ -33,14 +33,14 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.get('/list', async (req, res) => {
-  try {
+router.get('/list', authenticateToken, async (req, res) => {
+  res.json(req.user);
+  /*try {
     const users = await User.find();
-    console.log(users);
     res.json(users);
   } catch (exception) {
     console.log(exception);
-  }
+  }*/
   res.sendStatus(200);
 });
 

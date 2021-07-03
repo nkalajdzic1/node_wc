@@ -2,19 +2,18 @@ version: "3.4"
 
 services:
   backend:
-    container_name: docker-node-mongo
+    container_name: backend
     restart: always
-    image: backend
     command: node server.js
     build: .
     environment:
       NODE_ENV: production
     ports:
-      - 3000:3000
+      - "3000:3000"
     links:
       - mongo
   mongo:
     container_name: mongo
     image: mongo
     ports:
-      - 27017:27017
+      - "27017:27017"

@@ -1,10 +1,20 @@
+require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
 const fs = require('fs');
 const app = express();
 
-const User = require('./database/models/user');
-
 app.use(express.json());
+
+//<<<<<<< connection to database >>>>>>
+mongoose.connect(process.env.DATABASE_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: true,
+  useCreateIndex: true
+}).then(() => console.log('Database connected.')).catch(() => console.log('Database failed to connect.'))
+
+const User = require('./database/models/user');
 
 //<<<<<< routes >>>>>>//
 const registrationRouter = require('./routes/registration');
@@ -12,9 +22,6 @@ const loginRouter = require('./routes/login');
 
 app.use("/registration", registrationRouter);
 app.use("/login", loginRouter);
-
-//<<<<<<< connection to database >>>>>>//
-const db = require('./database/database');
 
 //<<<<<< database seeders >>>>>>//
 const user_seeds = JSON.parse(fs.readFileSync(`${__dirname}/database/seeders/user.json`, "utf-8"));

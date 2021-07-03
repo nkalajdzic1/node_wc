@@ -43,7 +43,7 @@ router.post('/', async (req, res) => {
                     res.send(`Invalid password for email ${userExists.email}`);
             }
         } catch (exception) {
-            res.status(400).send('Error');
+            res.status(400).json(exception);
         }
 
     }
