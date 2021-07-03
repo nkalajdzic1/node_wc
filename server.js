@@ -7,11 +7,10 @@ app.use(express.json());
 
 //<<<<<< routes >>>>>>//
 const registrationRouter = require('./routes/registration');
-app.use("/registration", registrationRouter);
+const loginRouter = require('./routes/login');
 
-app.get('/', (req, res) => {
-  res.send('Main route');
-});
+app.use("/registration", registrationRouter);
+app.use("/login", loginRouter);
 
 //<<<<<<< connection to database >>>>>>//
 const db = require('./database/database');
