@@ -1,7 +1,8 @@
 const express = require('express');
 const fs = require('fs');
-const User = require('./database/models/user');
 const app = express();
+
+const User = require('./database/models/user');
 
 app.use(express.json());
 
