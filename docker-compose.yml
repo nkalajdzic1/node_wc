@@ -12,6 +12,17 @@ services:
       - "3000:3000"
     links:
       - mongo
+  auth:
+    container_name: auth
+    restart: always
+    command: node authServer.js
+    build: .
+    environment:
+      NODE_ENV: production
+    ports:
+      - "4000:4000"
+    links:
+      - mongo
   mongo:
     container_name: mongo
     image: mongo

@@ -1,53 +1,23 @@
-require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
-const fs = require('fs');
 const app = express();
-
+const deleteData = require('./database/database_initialize/database_clear');
+const importData = require('./database/database_initialize/database_insert');
 app.use(express.json());
-
-//<<<<<<< connection to database >>>>>>
-mongoose.connect(process.env.DATABASE_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: true,
-  useCreateIndex: true
-}).then(() => console.log('Database connected.')).catch(() => console.log('Database failed to connect.'))
-
 const User = require('./database/models/user');
 
+//<<<<<<< connection to database >>>>>>
+const db = require('./database/database');
+
 //<<<<<< routes >>>>>>//
-const registrationRouter = require('./routes/registration');
-const loginRouter = require('./routes/login');
+const authenticateToken = require('./routes/authMiddleware');
 
-app.use("/registration", registrationRouter);
-app.use("/login", loginRouter);
+app.get('/users', authenticateToken, async (req, res) => {
+  const users = await User.find();
+  res.json(users);
+});
 
-//<<<<<< database seeders >>>>>>//
-const user_seeds = JSON.parse(fs.readFileSync(`${__dirname}/database/seeders/user.json`, "utf-8"));
 
-//<<<<<< clearing up database before importing data >>>>>>
-const deleteData = async () => {
-  try {
-    await User.deleteMany();
-    console.log("Database data cleared.");
-  } catch (exception) {
-    console.log(exception);
-  }
-}
-
-//<<<<<< database import of seeds >>>>>>//
-const importData = async () => {
-  try {
-    await User.create(user_seeds);
-    console.log("Data for users imported.");
-    //process.exit();
-  } catch (exception) {
-    console.log(exception);
-  }
-}
-
-//<<<<<< each time data from database gets deleted and imported respectively >>>>>>
+//<<<<<< each time the server restarts/runs data from the database gets deleted and imported respectively >>>>>>
 deleteData()
   .then(() =>
     importData()
