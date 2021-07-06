@@ -7,7 +7,7 @@ function validateEmail(email) {
 
 function generateAccesToken(user) {
     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: '180s'
+        expiresIn: '60s'
     });
 }
 

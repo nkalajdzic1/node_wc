@@ -13,7 +13,7 @@ const authenticateToken = require('./routes/authMiddleware');
 
 app.get('/users', authenticateToken, async (req, res) => {
   const users = await User.find();
-  res.json(users);
+  res.json(req.user);
 });
 
 
