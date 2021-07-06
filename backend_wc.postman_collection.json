@@ -1,0 +1,444 @@
+{
+	"info": {
+		"_postman_id": "fd959ce1-0dc9-4d5d-9c86-be39390e3bc4",
+		"name": "backend_wc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "authServer",
+			"item": [
+				{
+					"name": "register a user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"user3@gmail.com\",\r\n    \"password\": \"pass123123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{authserver}}/registration/",
+							"host": [
+								"{{authserver}}"
+							],
+							"path": [
+								"registration",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"newnewnew\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{authserver}}/login/change_password",
+							"host": [
+								"{{authserver}}"
+							],
+							"path": [
+								"login",
+								"change_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var accessToken = null;\r",
+									"var refreshToken = null;\r",
+									"var data = pm.response.json();\r",
+									"\r",
+									"if (data.accessToken !== null) {\r",
+									"    accessToken = data.accessToken;\r",
+									"}\r",
+									"\r",
+									"if (data.refreshToken !== null) {\r",
+									"    refreshToken = data.refreshToken;\r",
+									"}\r",
+									"\r",
+									"tests[\"response code is 200\"] = responseCode.code === 200;\r",
+									"tests[\"response contains accessToken\"] = accessToken !== null;\r",
+									"tests[\"response contains refreshToken\"] = refreshToken !== null;\r",
+									"pm.collectionVariables.set(\"accessToken\", JSON.stringify(accessToken));\r",
+									"pm.collectionVariables.set(\"token\", accessToken);\r",
+									"pm.collectionVariables.set(\"refreshToken\", JSON.stringify(refreshToken));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"user1@gmail.com\",\r\n    \"password\": \"123123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{authserver}}/login/",
+							"host": [
+								"{{authserver}}"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "relogin to refresh the token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var accessToken = null;\r",
+									"var data = pm.response.json();\r",
+									"\r",
+									"if (data.accessToken !== null) {\r",
+									"    accessToken = data.accessToken;\r",
+									"}\r",
+									"\r",
+									"tests[\"response code is 200\"] = responseCode.code === 200;\r",
+									"tests[\"response contains accessToken\"] = accessToken !== null;\r",
+									"pm.collectionVariables.set(\"accessToken\", JSON.stringify(accessToken));\r",
+									"pm.collectionVariables.set(\"token\", accessToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refreshToken\": {{refreshToken}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{authserver}}/login/token",
+							"host": [
+								"{{authserver}}"
+							],
+							"path": [
+								"login",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout route to delete the refresh token for the user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": {{refreshToken}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{authserver}}/logout",
+							"host": [
+								"{{authserver}}"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "server",
+			"item": [
+				{
+					"name": "get all lists for the given user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{server}}/list/all",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"list",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete the given list for the user",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{server}}/list/list1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"list",
+								"list1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get report for given time interval",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"from\": \"01/06/2021\",\r\n    \"to\": \"09/06/2021\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/report/",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"report",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add new list",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"list4\",\r\n    \"list\": [\r\n        {\r\n            \"product\": \"product A\",\r\n            \"quantity\": 22\r\n        },\r\n        {\r\n            \"product\": \"product B\",\r\n            \"quantity\": 41\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/list/add",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"list",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a list without changing list name",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"list1\",\r\n    \"list\": [\r\n        {\r\n            \"product\": \"product 1\",\r\n            \"quantity\": 11\r\n        },\r\n        {\r\n            \"product\": \"product 2\",\r\n            \"quantity\": 22\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/list/update",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"list",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a list with changing the list name",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"list1\",\r\n    \"modifiedListName\": \"this is list 1 the only one\",\r\n    \"list\": [\r\n        {\r\n            \"product\": \"product 11111\",\r\n            \"quantity\": 11111\r\n        },\r\n        {\r\n            \"product\": \"product 22222\",\r\n            \"quantity\": 22222\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/list/update",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"list",
+								"update"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "authserver",
+			"value": "http://localhost:4000"
+		},
+		{
+			"key": "server",
+			"value": "http://localhost:3000"
+		},
+		{
+			"key": "accessToken",
+			"value": ""
+		},
+		{
+			"key": "refreshToken",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
