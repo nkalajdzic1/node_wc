@@ -18,7 +18,7 @@ app.use("/report", reportRouter);
 
 
 //<<<<<< each time the server restarts/runs data from the database gets deleted and imported respectively >>>>>>
-/*deleteData()
+deleteData()
   .then(() =>
     importData()
     .catch(err => console.log(err)))

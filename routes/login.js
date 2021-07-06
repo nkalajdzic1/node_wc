@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const heplingF = require('./functions');
 const User = require('../database/models/user');
 const Token = require('../database/models/token');
+const authenticateToken = require('./authMiddleware');
 
 const router = express.Router();
 
@@ -79,6 +80,22 @@ router.post('/', async (req, res) => {
         });
     }
 
+});
+
+router.post('/change_password', authenticateToken, async (req, res) => {
+
+    if (await bcrypt.compare(req.body.password, req.user.password))
+        return res.status(400).json({
+            message: "Cannot change password. You are sending the current password"
+        });
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    User.updateOne({
+        email: req.user.email
+    }, {
+        password: hashedPassword
+    }).then(x => res.json(x)).catch(err => res.json(err));
 
 });
 
