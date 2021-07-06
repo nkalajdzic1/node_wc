@@ -22,9 +22,7 @@ router.post('/token', async (req, res) => {
 
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
         if (err) return res.sendStatus(403);
-        const accessToken = heplingF.generateAccesToken({
-            user_email: user.email
-        });
+        const accessToken = heplingF.generateAccesToken(user);
         res.json({
             accessToken: accessToken
         });

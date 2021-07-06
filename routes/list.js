@@ -11,6 +11,7 @@ function createListObject(body, user) {
     return {
         name: body.name,
         user_id: user.id,
+        user_email: user.email,
         created_at: new Date(),
         list: body.list
     }
@@ -35,9 +36,27 @@ router.post('/add', authenticateToken, async (req, res) => {
 
 });
 
-router.get('/all', async (req, res) => {
-    const list = await ShoppingList.find();
+router.get('/all', authenticateToken, async (req, res) => {
+    const list = await ShoppingList.find({
+        user_email: req.user.email
+    });
     res.json(list);
+});
+
+router.delete('/:listname', authenticateToken, async (req, res) => {
+    console.log(req.params.listname);
+    try {
+        const list = await ShoppingList.remove({
+            name: req.params.listname,
+            user_email: req.user.email
+        });
+        res.json(list);
+    } catch (exception) {
+        return res.status(400).json({
+            message: exception.message
+        });
+    }
+
 });
 
 router.put('/update', authenticateToken, async (req, res) => {
@@ -49,21 +68,19 @@ router.put('/update', authenticateToken, async (req, res) => {
     if (req.body.modifiedListName != null && req.body.modifiedListName != "") {
         const listObjectModifyWithName = {
             name: req.body.modifiedListName,
-            user_id: req.user.id,
             updated_at: new Date(),
             list: req.body.list,
         };
 
         ShoppingList.updateOne({
                 name: req.body.name,
-                user_id: req.user.id
+                user_email: req.user.email,
             }, listObjectModifyWithName)
             .then(x => res.json(x)).catch(err => res.json(err));
         return;
     }
 
     const listObjectModifyWithoutName = {
-        user_id: req.user.id,
         updated_at: new Date(),
         list: req.body.list
     };
@@ -71,7 +88,7 @@ router.put('/update', authenticateToken, async (req, res) => {
 
     ShoppingList.updateOne({
         name: req.body.name,
-        user_id: req.user.id
+        user_email: req.user.email
     }, listObjectModifyWithoutName).then(x => res.json(x)).catch(err => res.json(err));
 
 });

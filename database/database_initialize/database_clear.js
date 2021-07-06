@@ -7,7 +7,7 @@ const deleteData = async () => {
         await Token.deleteMany();
         console.log("User token data cleared.");
         await ShoppingList.deleteMany();
-        console.log("Shopping list data cleared.");
+        // console.log("Shopping list data cleared.");
         await User.deleteMany();
         console.log("User data cleared.");
     } catch (exception) {

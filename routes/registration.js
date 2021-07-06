@@ -4,7 +4,6 @@ const router = express.Router();
 
 const User = require('../database/models/user');
 
-//<<<<<< registration route >>>>>>//
 router.post('/', async (req, res) => {
 
   try {

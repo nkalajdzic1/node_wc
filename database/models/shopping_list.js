@@ -10,6 +10,10 @@ const shoppingListSchema = moongose.Schema({
         type: String,
         required: true,
     },
+    user_email: {
+        type: String,
+        required: true,
+    },
     list: {
         type: [{
             product: {
