@@ -7,9 +7,11 @@ The password for user1@gmail.com is 123123 and for the user user2@gmail.com is 3
 Secrets needed to be set up locally in the root folder in the file .env.
 The following secrets are:
 
-DATABASE_URL='mongodb://mongo:27017/backend'    <--- you need to write it like this beacuse the database
-ACCESS_TOKEN_SECRET=...                              gets mapped from docker (except you can change 'backend' to whatever you like)
+DATABASE_URL='mongodb://mongo:27017/backend'   
+ACCESS_TOKEN_SECRET=...                              
 REFRESH_TOKEN_SECRET=...
+
+ You need to write the DATABASE_URL like given above beacuse the database gets mapped from docker (except you can change 'backend' to whatever you like).
 
 For the token secrets you need to generate them. You can generate them via node with following steps:
 1. type node in console and press enter.
@@ -17,6 +19,7 @@ For the token secrets you need to generate them. You can generate them via node 
 3. repeat step 2. to create another secret key so the keys in access and refresh token are different.
 
 After that, you are ready to go and run the app via docker(build app via docker compose build and then run it with docker compose up).
+If you just want to run the app locally just change the secret to DATABASE_URL='mongodb://localhost:27017/backend' where the database name can again be whatever you like.
 
 The database for mongo resets each time the server resets so you can easily try out the request (that is why i am also doing the list CRUD operation over email, not over id because it chages).
 
