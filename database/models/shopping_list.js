@@ -1,13 +1,27 @@
 const moongose = require('mongoose');
 
 const shoppingListSchema = moongose.Schema({
+    name: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     user_id: {
-        type: Number,
+        type: String,
         required: true,
     },
-    product_id: {
-        type: Number,
-        required: true,
+    list: {
+        type: [{
+            product: {
+                type: String,
+                required: true,
+            },
+            quantity: {
+                type: Number,
+                required: true
+            }
+        }],
+        required: true
     },
     created_at: {
         type: Date,

@@ -1,21 +1,20 @@
 const express = require('express');
 const app = express();
+
 const deleteData = require('./database/database_initialize/database_clear');
 const importData = require('./database/database_initialize/database_insert');
+
 app.use(express.json());
-const User = require('./database/models/user');
 
 //<<<<<<< connection to database >>>>>>
 const db = require('./database/database');
 
 //<<<<<< routes >>>>>>//
-const authenticateToken = require('./routes/authMiddleware');
+const listRouter = require('./routes/list');
+const reportRouter = require('./routes/report');
 
-app.get('/users', authenticateToken, async (req, res) => {
-  const users = await User.find();
-  res.json(req.user);
-});
-
+app.use("/list", listRouter);
+app.use("/report", reportRouter);
 
 //<<<<<< each time the server restarts/runs data from the database gets deleted and imported respectively >>>>>>
 deleteData()

@@ -55,6 +55,7 @@ router.post('/', async (req, res) => {
         if (await bcrypt.compare(req.body.password, userExists.password)) {
 
             const user = {
+                id: userExists.id,
                 email: userExists.email,
                 password: userExists.password
             };
@@ -75,7 +76,9 @@ router.post('/', async (req, res) => {
         } else return res.send(`Invalid password for email ${userExists.email}`);
 
     } catch (exception) {
-        res.status(400).json(exception);
+        return res.status(400).json({
+            message: exception.message
+        });
     }
 
 
